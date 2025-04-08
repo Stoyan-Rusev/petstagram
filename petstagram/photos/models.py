@@ -10,7 +10,7 @@ class Photo(models.Model):
         validators=[
             FileSizeValidator(5)
         ],
-        upload_to='mediafiles'
+        upload_to=''
     )
     description = models.TextField(
         max_length=300,
