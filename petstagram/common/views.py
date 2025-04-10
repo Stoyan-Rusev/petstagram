@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, resolve_url
 from pyperclip import copy
 
 from petstagram.common.models import Like
@@ -33,6 +33,8 @@ def like_unlike_photo(request, photo_id: int):
 
 
 def copy_link_to_clipboard(request, pk: int):
-    copy(request.META.get('HTTP_HOST') + f'#{pk}')
+    copy(request.META.get('HTTP_HOST') + resolve_url('photo-details', pk))
 
     return redirect(request.META.get('HTTP_REFERER') + f"#{pk}")
+
+

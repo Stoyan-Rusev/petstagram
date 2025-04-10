@@ -32,3 +32,4 @@ class Photo(models.Model):
     date_of_publication = models.DateField(
         auto_now_add=True,
     )
+    
