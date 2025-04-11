@@ -23,7 +23,7 @@
                     <!-- show user username -->
                 </a>
                 <br>
-                <!-- if the photo has location -->
+            
                 {% if photo.location %}
                     <span>{{ photo.location }}</span>
                 {% endif %}
@@ -33,7 +33,7 @@
     </div>
 
     <div class="imgBx" id="{{ photo.id }}">
-        <img src="{{ photo.photo }}" alt="post" class="cover">
+        <img src="{{ photo.photo.url }}" alt="post" class="cover">
     </div>
 
     <div class="bottom">
@@ -56,26 +56,16 @@
         </div>
 
         <p class="likes">{{ photo.likes.count }} likes</p>
-
-
-        <!-- Start Tagged Pets -->
-        <!-- Link to First Tagged Pet Details Page-->
-        <a href="#">
+    
+        {% for pet in photo.tagged_pets.all %}
+            <a href="{% url 'pet-details' pet.name pet.slug %}">
             <p class="message">
-                <b>Sasho</b>
+                <b>{{ pet.name }}</b>
             </p>
         </a>
+        {% endfor %}
 
-        <!-- Link to Second Tagged Pet Details Page-->
-        <a href="#">
-            <p class="message">
-                <b>Some other fish</b>
-            </p>
-        </a>
-        <!-- End Tagged Pets -->
-
-        <!-- Link to Photo Details Page -->
-        <a href="#">
+        <a href="{% url 'photo-details' photo.pk %}">
             <h4 class="details">See details</h4>
         </a>
 
