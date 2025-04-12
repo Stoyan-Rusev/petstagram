@@ -27,7 +27,22 @@
                 {% if photo.location %}
                     <span>{{ photo.location }}</span>
                 {% endif %}
-
+                
+                {% if photo_page %}
+                    <div class="edit-delete-btns">
+                        <!-- Link to Edit Pet Photo Page -->
+                        <a href="#">
+                            <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
+                                 alt="edit button">
+                        </a>
+        
+                        <!-- Link to Delete Pet Photo Page -->
+                        <a href="#">
+                            <img class="bin-img" src="{% static '/images/icon-remove-22.jpg' %}"
+                                 alt="bin button">
+                        </a>
+                    </div>
+                {% endif %}
             </h3>
         </div>
     </div>
@@ -55,37 +70,66 @@
             </div>
         </div>
 
-        <p class="likes">{{ photo.likes.count }} likes</p>
+        <p class="likes">{{ likes.count }} likes</p>
     
         {% for pet in photo.tagged_pets.all %}
-            <a href="{% url 'pet-details' pet.name pet.slug %}">
+            <a href="{% url 'pet-details' 'username' pet.slug %}">
             <p class="message">
                 <b>{{ pet.name }}</b>
             </p>
         </a>
         {% endfor %}
-
-        <a href="{% url 'photo-details' photo.pk %}">
-            <h4 class="details">See details</h4>
-        </a>
-
-        <!-- Date of Publication -->
+    
+        {% if photo_page %}
+            <p class="pet-details">{{ photo.description }}</p>
+        {% else %} 
+            <a href="{% url 'photo-details' photo.pk %}">
+                <h4 class="details">See details</h4>
+            </a>
+        {% endif %}
+    
         <h5 class="postTime">{{ photo.date_of_publication }}</h5>
+        
+        {% if photo_page %}
+        {% for comment in comments %}
+        <div class="comments">
+            <div class="top">
+                <div class="userDetails">
+                    <div class="comment-data">
+                        <div class="profilepic">
+                            <div class="profile_img">
+                                <div class="image">
+                                    {% if comment.user.profile.profile_picture %}
+                                        <img src="{{ comment.user.profile.profile_picture }}" alt="img8">
+                                    {% else %}
+                                        <img src="{% static 'images/person.png' %}" alt="img8">
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <p>
+{#                            <a href="{% url 'profile-details' comment.user.pk %}">{{ comment.user.profile.get_full_name }}</a>#}
+                            {{ comment.comment_text }}
+                        </p>
+                    </div>
+                    <span>{{ comment.date_and_time_of_production }}</span>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
 
-        <!-- Start Add Comments Section -->
         <div class="addComments">
 
-            <!-- Start Add Comments Form -->
-            <form method="post" action="#">
+            <form method="post" action="{% url 'add-comment' photo.id %}">
+                {% csrf_token %}
                 <label for="id_body">Body:</label>
                 <textarea name="body" cols="40" rows="10" placeholder="Add comment..." maxlength="300"
                           required="" id="id_body"></textarea>
                 <button type="submit">Post</button>
             </form>
-            <!-- End Add Comments Form -->
 
         </div>
-        <!-- End Add Comments Section -->
 
     </div>
 </div>

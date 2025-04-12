@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, resolve_url
 from pyperclip import copy
 
-from petstagram.common.models import Like
+from petstagram.common.forms import AddCommentForm
+from petstagram.common.models import Like, Comment
 from petstagram.photos.models import Photo
 
 
@@ -38,3 +39,8 @@ def copy_link_to_clipboard(request, pk: int):
     return redirect(request.META.get('HTTP_REFERER') + f"#{pk}")
 
 
+def add_comment(request, photo_id):
+    photo = Photo.objects.get(id=photo_id)
+    comment = Comment(to_photo=photo, comment_text=request.POST.get('comment_text'))
+
+    return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
