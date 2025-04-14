@@ -11,7 +11,7 @@ def pet_add_page(request):
     if request.method == 'POST':
         if form.is_valid():
             form.save()
-            return redirect('home-page')
+            return redirect('profile-details', pk=1)
 
     context = {
         'form': form,
