@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-from petstagram.pets.forms import PetAddForm, PetEditForm
+from petstagram.pets.forms import PetAddForm, PetEditForm, PetDeleteForm
 from petstagram.pets.models import Pet
 
 
@@ -21,7 +21,19 @@ def pet_add_page(request):
 
 
 def pet_delete_page(request, username: str, pet_slug: str):
-    return render(request, 'pets/pet-delete-page.html')
+    pet = get_object_or_404(Pet, slug=pet_slug)
+    form = PetDeleteForm(instance=pet)
+
+    if request.method == 'POST':
+        pet.delete()
+        return redirect('home-page')
+
+    context = {
+        'form': form,
+        'pet': pet,
+    }
+
+    return render(request, 'pets/pet-delete-page.html', context=context)
 
 
 def pet_edit_page(request, username: str, pet_slug: str):
