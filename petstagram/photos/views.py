@@ -17,7 +17,7 @@ def add_photo(request):
         'form': form,
     }
 
-    return render(request, 'photos/photo-add-page.html', context=context)
+    return render(request, 'photos/photo-add-page.html', context)
 
 
 def photo_details(request, pk: int):
@@ -50,3 +50,9 @@ def edit_photo(request, pk):
     }
 
     return render(request, 'photos/photo-edit-page.html', context)
+
+
+def delete_photo(request, pk):
+    photo = get_object_or_404(Photo, pk=pk)
+    photo.delete()
+    return redirect('home-page')
