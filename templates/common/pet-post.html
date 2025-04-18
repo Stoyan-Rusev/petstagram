@@ -121,9 +121,7 @@
 
             <form method="post" action="{% url 'add-comment' photo.id %}">
                 {% csrf_token %}
-                <label for="id_body">Body:</label>
-                <textarea name="body" cols="40" rows="10" placeholder="Add comment..." maxlength="300"
-                          required="" id="id_body"></textarea>
+                {{ comment_form.as_p }}
                 <button type="submit">Post</button>
             </form>
 

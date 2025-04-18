@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, resolve_url
+from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 from pyperclip import copy
 
 from petstagram.common.forms import AddCommentForm
@@ -9,9 +9,11 @@ from petstagram.photos.models import Photo
 # Create your views here.
 def home_page(request):
     all_photos = Photo.objects.all()
+    comment_form = AddCommentForm()
 
     context = {
         'all_photos': all_photos,
+        'comment_form': comment_form,
     }
 
     return render(request, 'common/home-page.html', context=context)
@@ -40,7 +42,13 @@ def copy_link_to_clipboard(request, pk: int):
 
 
 def add_comment(request, photo_id):
-    photo = Photo.objects.get(id=photo_id)
-    comment = Comment(to_photo=photo, comment_text=request.POST.get('comment_text'))
+    if request.method == 'POST':
+        photo = get_object_or_404(Photo, id=photo_id)
+        form = AddCommentForm(request.POST)
 
-    return redirect(request.META.get('HTTP_REFERER') + f'#{photo_id}')
+        if form.is_valid():
+            comment = form.save(commit=False)
+            comment.to_photo = photo
+            comment.save()
+
+    return redirect(request.META.get('HTTP_REFERER', '/') + f'#{photo_id}')
