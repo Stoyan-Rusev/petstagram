@@ -15,3 +15,14 @@ class AddCommentForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class SearchForm(forms.Form):
+    search_text = forms.CharField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                'placeholder': 'Search by pet name...',
+            }
+        )
+    )
