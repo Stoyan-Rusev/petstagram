@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import CreateView
+from django.views.generic import CreateView, DetailView
 
 from petstagram.pets.forms import PetAddForm, PetEditForm, PetDeleteForm
 from petstagram.pets.models import Pet
@@ -46,11 +46,7 @@ def pet_edit_page(request, username: str, pet_slug: str):
     return render(request, 'pets/pet-edit-page.html', context=context)
 
 
-def pet_details_page(request, username: str, pet_slug: str):
-    pet = Pet.objects.get(slug=pet_slug)
-
-    context = {
-        'pet': pet,
-    }
-
-    return render(request, 'pets/pet-details-page.html', context)
+class PetDetailsView(DetailView):
+    model = Pet
+    template_name = 'pets/pet-details-page.html'
+    slug_url_kwarg = 'pet_slug'
