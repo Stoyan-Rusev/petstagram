@@ -29,22 +29,6 @@ class DeletePetView(DeleteView):
         return kwargs
 
 
-def pet_delete_page(request, username: str, pet_slug: str):
-    pet = get_object_or_404(Pet, slug=pet_slug)
-    form = PetDeleteForm(instance=pet)
-
-    if request.method == 'POST':
-        pet.delete()
-        return redirect('home-page')
-
-    context = {
-        'form': form,
-        'pet': pet,
-    }
-
-    return render(request, 'pets/pet-delete-page.html', context=context)
-
-
 class EditPetView(UpdateView):
     model = Pet
     form_class = PetEditForm

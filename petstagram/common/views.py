@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 from pyperclip import copy
 
@@ -16,6 +17,17 @@ def home_page(request):
         all_photos = all_photos.filter(
             tagged_pets__name__icontains=search_form.cleaned_data['search_text']
         )
+
+    page = request.GET.get('page')
+    photos_per_page = 1
+    paginator = Paginator(all_photos, photos_per_page)
+
+    try:
+        all_photos = paginator.page(page)
+    except PageNotAnInteger:
+        all_photos = paginator.page(1)
+    except EmptyPage:
+        all_photos = paginator.page(paginator.num_pages)
 
     context = {
         'all_photos': all_photos,
