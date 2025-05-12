@@ -1,13 +1,37 @@
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, resolve_url, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView
 from pyperclip import copy
 
 from petstagram.common.forms import AddCommentForm, SearchForm
-from petstagram.common.models import Like, Comment
+from petstagram.common.models import Like
 from petstagram.photos.models import Photo
 
 
-# Create your views here.
+class HomeView(ListView):
+    model = Photo
+    template_name = 'common/home-page.html'
+    paginate_by = 1
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['search_form'] = SearchForm(self.request.GET)
+        context['comment_form'] = AddCommentForm(self.request.POST or None)
+
+        return context
+
+    def get_queryset(self):
+        queryset = super().get_queryset().order_by('-id')
+        search_text = self.request.GET.get('search_text')
+
+        if search_text:
+            queryset = queryset.filter(tagged_pets__name__icontains=search_text)
+
+        return queryset
+
+
 def home_page(request):
     all_photos = Photo.objects.all()
     comment_form = AddCommentForm()
@@ -30,7 +54,7 @@ def home_page(request):
         all_photos = paginator.page(paginator.num_pages)
 
     context = {
-        'all_photos': all_photos,
+        'page_obj': all_photos,
         'comment_form': comment_form,
         'search_form': search_form,
     }
