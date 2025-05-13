@@ -17,14 +17,12 @@
                 {% include 'common/pet-post.html' %}
             {% endfor %}
         
-            <!-- Start Pagination -->
             <div class="pagination">
                 <span class="current">
                         Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
                 </span>
             
                 <span class="step-links-buttons">
-                    <!-- If there are previous and next photos -->
                     {% if page_obj.has_previous and page_obj.has_next %}
                         <a href="?page={{ page_obj.previous_page_number }}&search_text={{ search_text }}">
                             <i class="fa-solid fa-arrow-left"></i>
@@ -33,13 +31,11 @@
                             <i class="fa-solid fa-arrow-right"></i>
                         </a>
                         
-                    <!-- If there are only previous photos -->
                     {% elif page_obj.has_previous %}
                         <a href="?page={{ page_obj.previous_page_number }}&search_text={{ search_text }}">
                             <i class="fa-solid fa-arrow-left"></i>
                         </a>
 
-                    <!-- If there are only next photos -->
                     {% elif page_obj.has_next %}
                         <a href="?page={{ page_obj.next_page_number }}&search_text={{ search_text }}">
                             <i class="fa-solid fa-arrow-right"></i>
@@ -47,7 +43,6 @@
                     {% endif %}
                 </span>
             </div>
-            <!-- End Pagination -->
         
         </div>
     </div>
