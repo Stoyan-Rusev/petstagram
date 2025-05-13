@@ -17,7 +17,14 @@ class HomeView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['search_form'] = SearchForm(self.request.GET)
+        search_text = ''
+        search_form = SearchForm(self.request.GET)
+
+        if search_form.is_valid():
+            search_text = search_form.cleaned_data['search_text']
+
+        context['search_form'] = search_form
+        context['search_text'] = search_text
         context['comment_form'] = AddCommentForm(self.request.POST or None)
 
         return context
@@ -30,36 +37,6 @@ class HomeView(ListView):
             queryset = queryset.filter(tagged_pets__name__icontains=search_text)
 
         return queryset
-
-
-def home_page(request):
-    all_photos = Photo.objects.all()
-    comment_form = AddCommentForm()
-    search_form = SearchForm(request.GET)
-
-    if search_form.is_valid():
-        all_photos = all_photos.filter(
-            tagged_pets__name__icontains=search_form.cleaned_data['search_text']
-        )
-
-    page = request.GET.get('page')
-    photos_per_page = 1
-    paginator = Paginator(all_photos, photos_per_page)
-
-    try:
-        all_photos = paginator.page(page)
-    except PageNotAnInteger:
-        all_photos = paginator.page(1)
-    except EmptyPage:
-        all_photos = paginator.page(paginator.num_pages)
-
-    context = {
-        'page_obj': all_photos,
-        'comment_form': comment_form,
-        'search_form': search_form,
-    }
-
-    return render(request, 'common/home-page.html', context=context)
 
 
 def like_unlike_photo(request, photo_id: int):
