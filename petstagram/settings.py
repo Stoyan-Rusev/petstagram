@@ -80,14 +80,15 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "petstagram_db",
-        "USER": "postgres",
-        "PASSWORD": "admin",
-        "HOST": "127.0.0.1",
-        "PORT": "5432",
+        "USER": "postgres-user",
+        "PASSWORD": "password",
+        "HOST": "localhost",
+        "PORT": "5433",
     }
 }
 
