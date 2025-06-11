@@ -5,14 +5,17 @@
     <div class="login-register-box">
         <h1>Petstagram</h1>
 
-        <form action="">
-            <input type="text" placeholder="Username">
-
-            <input type="email" placeholder="Email">
-
-            <input type="password" placeholder="Password">
-
-            <input type="password" placeholder="Repeat Password">
+        <form method="post" action="">
+            {% csrf_token %}
+            
+            {{ form.email }}
+            {{ form.email.errors }}
+            
+            {{ form.password1 }}
+            {{ form.password1.errors }}
+            
+            {{ form.password2 }}
+            {{ form.password2.errors }}
 
             <button type="submit">Register</button>
         </form>
