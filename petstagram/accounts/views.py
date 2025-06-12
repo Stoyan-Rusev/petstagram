@@ -20,10 +20,6 @@ class AppUserRegisterView(CreateView):
         return response
 
 
-def register(request):
-    return render(request, 'accounts/register-page.html')
-
-
 # def login(request):
 #     return render(request, 'accounts/login-page.html')
 
