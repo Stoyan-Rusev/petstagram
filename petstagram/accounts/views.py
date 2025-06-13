@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.views import LoginView
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 
-from petstagram.accounts.forms import AppUserCreationForm
+from petstagram.accounts.forms import AppUserCreationForm, AppUserAuthenticationForm
 
 UserModel = get_user_model()
 
@@ -20,8 +21,9 @@ class AppUserRegisterView(CreateView):
         return response
 
 
-# def login(request):
-#     return render(request, 'accounts/login-page.html')
+class AppUserLoginView(LoginView):
+    form_class = AppUserAuthenticationForm
+    template_name = 'accounts/login-page.html'
 
 
 def show_profile_details(request, pk):
