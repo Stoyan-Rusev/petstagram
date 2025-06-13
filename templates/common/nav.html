@@ -45,9 +45,10 @@
                 </li>
                 
                 <li class="nav-item">
-                    <a href="#">
-                        <i>Log out</i>
-                    </a>
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button class="button"><i>Logout</i></button>
+                    </form>
                 </li>
             </ul>
         </div>

@@ -9,7 +9,7 @@
 
         <form method="post">
             {% csrf_token %}
-{#            {{ form }}#}
+            
             {{ form.username|add_placeholder:'Email' }}
             {{ form.username.errors }}
 
