@@ -14,42 +14,46 @@
 
         <div class="nav-links">
             <ul class="nav-group">
-                <li class="nav-item">
-                    <a href="{% url 'pet-add' %}">
-                        <i>Add Pet</i>
-                    </a>
-                </li>
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'pet-add' %}">
+                            <i>Add Pet</i>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="{% url 'photo-add' %}">
+                            <i>Add Photo</i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'login' %}">
+                            <i>Login</i>
+                        </a>
+                    </li>
+                    
+                    <li class="nav-item">
+                        <a href="{% url 'register' %}">
+                            <i>Register</i>
+                        </a>
+                    </li>
+                {% endif %}
+            
+                {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'profile-details' pk=1 %}">
+                            <i>Profile</i>
+                        </a>
+                    </li>
                 
-                <li class="nav-item">
-                    <a href="{% url 'photo-add' %}">
-                        <i>Add Photo</i>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{% url 'login' %}">
-                        <i>Login</i>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{% url 'register' %}">
-                        <i>Register</i>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <a href="{% url 'profile-details' pk=1 %}">
-                        <i>Profile</i>
-                    </a>
-                </li>
-                
-                <li class="nav-item">
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button class="button"><i>Logout</i></button>
-                    </form>
-                </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button class="button"><i>Logout</i></button>
+                        </form>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </div>
