@@ -28,7 +28,18 @@ class AppUserAuthenticationForm(AuthenticationForm):
         model = UserModel
         fields = '__all__'
 
-# class ProfileChangeForm(forms.ModelForm):
-#     class Meta:
-#         model = Profile
-#         exclude = ('user', )
+
+class ProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        exclude = ('user', )
+        labels = {
+            'first_name': 'First Name',
+            'last_name': 'Last Name',
+            'date_of_birth': 'Date of Birth',
+            'profile_picture': 'Profile Picture',
+        }
+        widgets = {
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
+        }
