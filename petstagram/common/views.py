@@ -1,3 +1,4 @@
+from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render, redirect, resolve_url, get_object_or_404
 from django.urls import reverse_lazy
@@ -39,16 +40,19 @@ class HomeView(ListView):
         return queryset
 
 
+@login_required
 def like_unlike_photo(request, photo_id: int):
     like = Like.objects.filter(
-        to_photo_id=photo_id
+        to_photo_id=photo_id,
+        user=request.user,
     ).first()
 
     if like:
         like.delete()
     else:
         like = Like(
-            to_photo_id=photo_id
+            to_photo_id=photo_id,
+            user=request.user,
         )
         like.save()
 
@@ -61,6 +65,7 @@ def copy_link_to_clipboard(request, pk: int):
     return redirect(request.META.get('HTTP_REFERER') + f"#{pk}")
 
 
+@login_required
 def add_comment(request, photo_id):
     if request.method == 'POST':
         photo = get_object_or_404(Photo, id=photo_id)
@@ -69,6 +74,7 @@ def add_comment(request, photo_id):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.to_photo = photo
+            comment.user = request.user
             comment.save()
 
     return redirect(request.META.get('HTTP_REFERER', '/') + f'#{photo_id}')
