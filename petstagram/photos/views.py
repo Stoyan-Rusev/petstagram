@@ -15,6 +15,10 @@ class PhotoAddView(LoginRequiredMixin, CreateView):
     template_name = 'photos/photo-add-page.html'
     success_url = reverse_lazy('home-page')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 
 class PhotoEditView(LoginRequiredMixin, UpdateView):
     model = Photo

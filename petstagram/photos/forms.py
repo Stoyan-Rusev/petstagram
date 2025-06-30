@@ -10,7 +10,9 @@ class PhotoBaseForm(forms.ModelForm):
 
 
 class PhotoCreateForm(PhotoBaseForm):
-    pass
+    class Meta:
+        model = Photo
+        exclude = ['user', ]
 
 
 class PhotoEditForm(PhotoBaseForm):
