@@ -4,23 +4,26 @@
 
     <div class="top">
         <div class="userDetails">
-            <!-- Link to User Profile Page -->
-            <a href="#">
+            <a href="{% url 'profile-details' pk=photo.user.pk %}">
                 <div class="profilepic">
                     <div class="profile_img">
                         <div class="image">
-                            <img src="{% static 'images/person.png' %}" alt="img8">
+                            {% if photo.user.profile.profile_picture  %} 
+                                <img src="{{ photo.user.profile_picture }}" alt="Profile picture">
+                            {% else %}
+                                <img src="{% static 'images/person.png' %}" alt="img8">
+                            {% endif %}
                         </div>
                     </div>
                 </div>
             </a>
             <h3>
-                <!-- Link to User Profile Page -->
-                <a href="#">
-                    <!-- if user has first name and last name -->
-                    Diyan Kalaydzhiev
-                    <!-- else -->
-                    <!-- show user username -->
+                <a href="{% url 'profile-details' pk=photo.user.pk %}">
+                    {% if photo.user.profile.first_name or photo.user.profile.last_name %}
+                        {{ photo.user.profile.get_full_name }}
+                    {% else %}
+                        {{ photo.user.email }}
+                    {% endif %}
                 </a>
                 <br>
             
@@ -106,7 +109,15 @@
                             </div>
                         </div>
                         <p>
-{#                            <a href="{% url 'profile-details' comment.user.pk %}">{{ comment.user.profile.get_full_name }}</a>#}
+                            {% if photo.user.profile.first_name or photo.user.profile.last_name %}
+                                <a href="{% url 'profile-details' comment.user.pk %}">
+                                    {{ comment.user.profile.get_full_name }}
+                                </a>
+                            {% else %}
+                                <a href="{% url 'profile-details' comment.user.pk %}">
+                                    {{ comment.user.email }}
+                                </a>
+                            {% endif %}
                             {{ comment.comment_text }}
                         </p>
                     </div>
