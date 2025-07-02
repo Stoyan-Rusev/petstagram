@@ -42,7 +42,18 @@ class EditProfileView(UpdateView):
 
 
 def show_profile_details(request, pk):
-    return render(request, 'accounts/profile-details-page.html')
+    user = UserModel.objects.get(pk=pk)
+    total_likes = 0
+    for photo in user.photos.all():
+        for like in photo.likes.all():
+            total_likes += 1
+
+    context = {
+        'user': user,
+        'total_likes': total_likes,
+    }
+
+    return render(request, 'accounts/profile-details-page.html', context)
 
 
 def edit_profile(request):

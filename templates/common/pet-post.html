@@ -9,7 +9,7 @@
                     <div class="profile_img">
                         <div class="image">
                             {% if photo.user.profile.profile_picture  %} 
-                                <img src="{{ photo.user.profile_picture }}" alt="Profile picture">
+                                <img src="{{ photo.user.profile.profile_picture }}" alt="Profile picture">
                             {% else %}
                                 <img src="{% static 'images/person.png' %}" alt="img8">
                             {% endif %}
@@ -31,7 +31,7 @@
                     <span>{{ photo.location }}</span>
                 {% endif %}
                 
-                {% if photo_page %}
+                {% if photo_page and request.user.pk == photo.user.pk %}
                     <div class="edit-delete-btns">
                         <a href="{% url 'photo-edit' photo.pk %}">
                             <img class="edit-img" src="{% static '/images/edit-pen-icon-6.jpg' %}"
@@ -74,11 +74,11 @@
         <p class="likes">{{ likes.count }} likes</p>
     
         {% for pet in photo.tagged_pets.all %}
-            <a href="{% url 'pet-details' 'username' pet.slug %}">
-            <p class="message">
-                <b>{{ pet.name }}</b>
-            </p>
-        </a>
+            <a href="{% url 'pet-details' photo.user.profile.get_full_name pet.slug %}">
+                <p class="message">
+                    <b>{{ pet.name }}</b>
+                </p>
+            </a>
         {% endfor %}
     
         {% if photo_page %}
@@ -115,7 +115,7 @@
                                 </a>
                             {% else %}
                                 <a href="{% url 'profile-details' comment.user.pk %}">
-                                    {{ comment.user.email }}
+                                    'Anonymous'
                                 </a>
                             {% endif %}
                             {{ comment.comment_text }}
