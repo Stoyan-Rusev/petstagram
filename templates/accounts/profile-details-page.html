@@ -5,9 +5,15 @@
 <div class="profile">
 <div class="profile-data">
   <div class="profile_img">
+  
     <div class="image">
-      <img src="{{ user.profile.profile_picture }}" alt="img8" />
+        {% if user.profile.profile_picture %}
+            <img src="{{ user.profile.profile_picture }}" alt="img8" />
+        {% else %}
+            <img src="{% static 'images/person.png' %}" alt="img8" />
+        {% endif %}
     </div>
+  
   </div>
   <div class="personal">
     <div class="edit">
@@ -17,7 +23,7 @@
           <a href="{% url 'profile-edit' pk=request.user.pk %}">
             <img
               class="edit-img"
-              src="/static/images/edit-pen-icon-6.jpg"
+              src="{%  static 'images/edit-pen-icon-6.jpg' %}"
               alt="edit button"
             />
           </a>
@@ -25,7 +31,7 @@
           <a href="">
             <img
               class="bin-img"
-              src="/static/images/icon-remove-22.jpg"
+              src="{% static "images/icon-remove-22.jpg" %}"
               alt="bin button"
             />
           </a>
@@ -45,19 +51,20 @@
     {% if user.profile.first_name and user.profile.last_name %}
         <h3 class="names">{{ user.profile.get_full_name }}</h3>
     {% endif %}
+  
     <p class="email">{{ user.email }}</p>
     </div>
 </div>  
 
 <div class="pets">
   <div class="statuses">
-  {% for pet in user.pets.all %}
-    <a href="">
+  {% for pet in pets %}
+    <a href="{% url 'pet-details' user.profile.get_full_name pet.slug %}">
         <div class="head-pet">
             <div class="status">
               <div class="image">
                 <img
-                  src="{{ pet.personal_image }}"
+                  src="{{ pet.personal_photo }}"
                   alt="pet img"
                 />
               </div>
@@ -65,54 +72,29 @@
             <p>{{ pet.name }}</p>
         </div>
     </a>
-    {% endfor %}
-<!-- Start Last Uploaded Photos Section -->
+  {% endfor %}
+  </div>
+</div>
+    
+
 <div class="pet-photos">
-  <!-- Link to Last Uploaded Pet Photo -->
-  <a href="#">
-    <!-- Pet Photo -->
+{% if user.photos.exists %}
+    {% for photo in user.photos.all %}
+      <a href="{% url 'photo-details' photo.pk %}">
+        <img
+          src="{{ photo.photo.url }}"
+          alt="pet img"
+        />
+      </a>
+    {% endfor %}
+{% else %}
     <img
-      src="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
-      alt="pet img"
+      class="no-posts"
+      src="{% static "images/no_posts.png" %}"
+      alt="no posts"
     />
-  </a>
-
-  <!-- Link to Uploaded Pet Photo -->
-  <a href="#">
-    <!-- Pet Photo -->
-    <img
-      src="https://cf.ltkcdn.net/small-pets/images/orig/278587-1600x1066-goldfish-swimming-in-fish-tank.jpg"
-      alt="pet img"
-    />
-  </a>
-
-  <!-- Link to Uploaded Pet Photo -->
-  <a href="#">
-    <!-- Pet Photo -->
-    <img
-      src="https://thumbs.dreamstime.com/b/small-golden-retriever-puppy-6482030.jpg"
-      alt="pet img"
-    />
-  </a>
-
-  <!-- Link to  Uploaded Pet Photo -->
-  <a href="#">
-    <!-- Pet Photo -->
-    <img
-      src="https://i.pinimg.com/originals/4e/55/83/4e5583748bc4000805df50e4ebcafffc.png"
-      alt="pet img"
-    />
-  </a>
+    {% endif %}    
 </div>
-<!-- End Last Uploaded Photos Section -->
-
-<!-- IF NO Posts Show No Post Image -->
-
-<img
-  class="no-posts"
-  src="/static/images/no_posts.png"
-  alt="no posts"
-/>
 </div>
-
+    
 {% endblock %}

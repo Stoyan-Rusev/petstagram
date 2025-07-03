@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView,UpdateView
 
@@ -42,7 +42,8 @@ class EditProfileView(UpdateView):
 
 
 def show_profile_details(request, pk):
-    user = UserModel.objects.get(pk=pk)
+    user = get_object_or_404(UserModel, pk=pk)
+    pets = user.pets.all()
     total_likes = 0
     for photo in user.photos.all():
         for like in photo.likes.all():
@@ -51,6 +52,7 @@ def show_profile_details(request, pk):
     context = {
         'user': user,
         'total_likes': total_likes,
+        'pets': pets,
     }
 
     return render(request, 'accounts/profile-details-page.html', context)
