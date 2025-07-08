@@ -57,11 +57,15 @@ class PetDetailsView(DetailView):
     template_name = 'pets/pet-details-page.html'
     slug_url_kwarg = 'pet_slug'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #
-    #     user = self.request.user
-    #     for photo in context['pet'].photo_set.all():
-    #         photo.has_liked = photo.likes.all().filter(user=user).exists() if user.is_authenticated else False
-    #
-    #     return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+        photos = context['pet'].photo_set.all()
+
+        for photo in photos:
+            photo.has_liked = photo.likes.all().filter(user=user).exists() if user.is_authenticated else False
+
+        context['photos'] = photos
+
+        return context

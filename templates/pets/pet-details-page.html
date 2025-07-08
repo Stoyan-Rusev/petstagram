@@ -35,7 +35,7 @@
 
     <div class="pet-posts">
         {% if pet.photo_set %}
-            {% for photo in pet.photo_set.all %}
+            {% for photo in photos %}
                 {% include 'common/pet-post.html' %}
             {% endfor %}
         {% else %}
