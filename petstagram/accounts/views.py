@@ -33,7 +33,6 @@ class AppUserLogoutView(LoginRequiredMixin, LogoutView):
     pass
 
 
-# TODO
 class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileEditForm

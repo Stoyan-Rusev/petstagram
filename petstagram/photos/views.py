@@ -36,6 +36,8 @@ class PhotoDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        user = self.request.user
+        self.object.has_liked = self.object.likes.all().filter(user=user).exists() if user.is_authenticated else False
         context['likes'] = self.object.likes.all()
         context['comments'] = self.object.comment_set.all()
         context['comment_form'] = AddCommentForm()
