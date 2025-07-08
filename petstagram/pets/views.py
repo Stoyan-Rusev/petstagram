@@ -5,6 +5,7 @@ from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
 
 from petstagram.pets.forms import PetAddForm, PetEditForm, PetDeleteForm
 from petstagram.pets.models import Pet
+from petstagram.photos.services import annotate_photos_with_likes
 
 
 class AddPetView(LoginRequiredMixin, CreateView):
@@ -60,11 +61,8 @@ class PetDetailsView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        user = self.request.user
         photos = context['pet'].photo_set.all()
-
-        for photo in photos:
-            photo.has_liked = photo.likes.all().filter(user=user).exists() if user.is_authenticated else False
+        annotate_photos_with_likes(photos, self.request.user)
 
         context['photos'] = photos
 

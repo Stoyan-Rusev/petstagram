@@ -6,6 +6,7 @@ from pyperclip import copy
 from petstagram.common.forms import AddCommentForm, SearchForm
 from petstagram.common.models import Like
 from petstagram.photos.models import Photo
+from petstagram.photos.services import annotate_photos_with_likes
 
 
 class HomeView(ListView):
@@ -22,9 +23,7 @@ class HomeView(ListView):
         if search_form.is_valid():
             search_text = search_form.cleaned_data['search_text']
 
-        user = self.request.user
-        for photo in context['object_list']:
-            photo.has_liked = photo.likes.filter(user=user).exists() if user.is_authenticated else False
+        annotate_photos_with_likes(context['object_list'], self.request.user)
 
         context['search_form'] = search_form
         context['search_text'] = search_text
