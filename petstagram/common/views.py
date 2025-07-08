@@ -24,6 +24,10 @@ class HomeView(ListView):
         if search_form.is_valid():
             search_text = search_form.cleaned_data['search_text']
 
+        user = self.request.user
+        for photo in context['object_list']:
+            photo.has_liked = photo.likes.filter(user=user).exists() if user.is_authenticated else False
+
         context['search_form'] = search_form
         context['search_text'] = search_text
         context['comment_form'] = AddCommentForm(self.request.POST or None)

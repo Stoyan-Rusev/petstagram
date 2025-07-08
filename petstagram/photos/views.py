@@ -43,6 +43,7 @@ class PhotoDetailsView(DetailView):
         return context
 
 
+# TODO: security fix
 @login_required
 def delete_photo(request, pk):
     photo = get_object_or_404(Photo, pk=pk)

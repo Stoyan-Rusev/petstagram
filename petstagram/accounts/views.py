@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, get_object_or_404
@@ -32,7 +33,8 @@ class AppUserLogoutView(LoginRequiredMixin, LogoutView):
     pass
 
 
-class EditProfileView(UpdateView):
+# TODO
+class EditProfileView(LoginRequiredMixin, UpdateView):
     model = Profile
     form_class = ProfileEditForm
     template_name = 'accounts/profile-edit-page.html'
@@ -58,9 +60,7 @@ def show_profile_details(request, pk):
     return render(request, 'accounts/profile-details-page.html', context)
 
 
-def edit_profile(request):
-    return render(request, 'accounts/profile-edit-page.html')
-
-
+# TODO
+@login_required
 def delete_profile(request):
     return render(request, 'accounts/profile-delete-page.html')
