@@ -4,7 +4,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
-from django.views.generic import CreateView,UpdateView
+from django.views.decorators.http import require_POST
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from petstagram.accounts.forms import AppUserCreationForm, AppUserAuthenticationForm, ProfileEditForm
 from petstagram.accounts.models import Profile
@@ -62,7 +63,14 @@ def show_profile_details(request, pk):
     return render(request, 'accounts/profile-details-page.html', context)
 
 
-# TODO
 @login_required
-def delete_profile(request):
+def delete_confirm(request):
     return render(request, 'accounts/profile-delete-page.html')
+
+
+@require_POST
+@login_required
+def delete_profile(request, pk):
+    if request.user.pk == pk:
+        request.user.delete()
+    return redirect('home-page')
