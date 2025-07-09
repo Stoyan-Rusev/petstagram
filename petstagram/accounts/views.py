@@ -5,7 +5,7 @@ from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.decorators.http import require_POST
-from django.views.generic import CreateView, UpdateView, DeleteView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
 
 from petstagram.accounts.forms import AppUserCreationForm, AppUserAuthenticationForm, ProfileEditForm
 from petstagram.accounts.models import Profile
@@ -46,21 +46,18 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return Profile.objects.filter(user=self.request.user)
 
 
-def show_profile_details(request, pk):
-    user = get_object_or_404(UserModel, pk=pk)
-    pets = user.pets.all()
-    total_likes = 0
-    for photo in user.photos.all():
-        for like in photo.likes.all():
-            total_likes += 1
+class ProfileDetails(DetailView):
+    model = UserModel
+    template_name = 'accounts/profile-details-page.html'
+    context_object_name = 'user'
 
-    context = {
-        'user': user,
-        'total_likes': total_likes,
-        'pets': pets,
-    }
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
-    return render(request, 'accounts/profile-details-page.html', context)
+        context['pets'] = self.object.pets.all()
+        context['total_likes'] = sum(1 for photo in self.object.photos.all() for like in photo.likes.all())
+
+        return context
 
 
 @login_required
