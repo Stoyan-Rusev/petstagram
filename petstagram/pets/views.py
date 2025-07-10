@@ -1,4 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.forms import model_to_dict
+from django.http import Http404
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
@@ -28,13 +30,17 @@ class DeletePetView(LoginRequiredMixin, DeleteView):
     slug_url_kwarg = 'pet_slug'
     success_url = reverse_lazy('home-page')
 
-    def get_initial(self):
-        return self.get_object().__dict__
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        kwargs.update({'data': self.get_initial()})
+
+        obj = self.get_object()
+        data = model_to_dict(obj)
+        kwargs['initial'] = data
+
         return kwargs
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
 
 
 class EditPetView(LoginRequiredMixin, UpdateView):

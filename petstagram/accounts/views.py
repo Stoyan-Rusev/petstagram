@@ -46,7 +46,7 @@ class EditProfileView(LoginRequiredMixin, UpdateView):
         return Profile.objects.filter(user=self.request.user)
 
 
-class ProfileDetails(DetailView):
+class ProfileDetailsView(DetailView):
     model = UserModel
     template_name = 'accounts/profile-details-page.html'
     context_object_name = 'user'
