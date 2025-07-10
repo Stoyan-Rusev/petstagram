@@ -59,6 +59,3 @@ def delete_photo(request, pk):
 
     photo.delete()
     return redirect('home-page')
-
-
-
