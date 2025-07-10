@@ -58,6 +58,9 @@ class EditPetView(LoginRequiredMixin, UpdateView):
             }
         )
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
 
 class PetDetailsView(DetailView):
     model = Pet
