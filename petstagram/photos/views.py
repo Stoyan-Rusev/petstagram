@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView, DetailView
@@ -29,6 +30,9 @@ class PhotoEditView(LoginRequiredMixin, UpdateView):
     def get_success_url(self):
         return reverse_lazy('photo-details', kwargs={'pk': self.object.pk})
 
+    def get_queryset(self):
+        return super().get_queryset().filter(user=self.request.user)
+
 
 class PhotoDetailsView(DetailView):
     model = Photo
@@ -46,9 +50,15 @@ class PhotoDetailsView(DetailView):
         return context
 
 
-# TODO: security fix
 @login_required
 def delete_photo(request, pk):
     photo = get_object_or_404(Photo, pk=pk)
+
+    if photo.user != request.user:
+        raise Http404()
+
     photo.delete()
     return redirect('home-page')
+
+
+
