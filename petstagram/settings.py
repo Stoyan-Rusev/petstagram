@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config('DEBUG', default=False, cast=bool)
+DEBUG = config('DEBUG', default="0").lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
@@ -105,13 +105,18 @@ LOCAL_DB = {
     "PORT": config("DATABASE_PORT", default="5432"),
 }
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=LOCAL_DB,
-        conn_max_age=600,
-        ssl_require=True
-    )
-}
+database_url = config("DATABASE_URL", default=None)
+
+if database_url:
+    DATABASES = {
+        "default": dj_database_url.parse(
+            database_url,
+            conn_max_age=600,
+            ssl_require=True
+        )
+    }
+else:
+    DATABASES = {"default": LOCAL_DB}
 
 
 # Password validation
