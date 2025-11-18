@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 
+import dj_database_url
 from decouple import config, Csv
 from django.urls import reverse_lazy
 
@@ -84,15 +85,32 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": config("DATABASE_NAME"),
+#         "USER": config("DATABASE_USER"),
+#         "PASSWORD": config("DATABASE_PASSWORD"),
+#         "HOST": "localhost",
+#         "PORT": "5433",
+#     }
+# }
+
+LOCAL_DB = {
+    "ENGINE": "django.db.backends.postgresql",
+    "NAME": config("DATABASE_NAME", default="petstagram_local"),
+    "USER": config("DATABASE_USER", default="postgres"),
+    "PASSWORD": config("DATABASE_PASSWORD", default=""),
+    "HOST": config("DATABASE_HOST", default="localhost"),
+    "PORT": config("DATABASE_PORT", default="5432"),
+}
+
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": config("DATABASE_NAME"),
-        "USER": config("DATABASE_USER"),
-        "PASSWORD": config("DATABASE_PASSWORD"),
-        "HOST": "localhost",
-        "PORT": "5433",
-    }
+    "default": dj_database_url.config(
+        default=LOCAL_DB,
+        conn_max_age=600,
+        ssl_require=True
+    )
 }
 
 
