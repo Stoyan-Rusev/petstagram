@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 import dj_database_url
@@ -85,39 +85,25 @@ WSGI_APPLICATION = 'petstagram.wsgi.application'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": config("DATABASE_NAME"),
-#         "USER": config("DATABASE_USER"),
-#         "PASSWORD": config("DATABASE_PASSWORD"),
-#         "HOST": "localhost",
-#         "PORT": "5433",
-#     }
-# }
-
-LOCAL_DB = {
-    "ENGINE": "django.db.backends.postgresql",
-    "NAME": config("DATABASE_NAME", default="petstagram_local"),
-    "USER": config("DATABASE_USER", default="postgres"),
-    "PASSWORD": config("DATABASE_PASSWORD", default=""),
-    "HOST": config("DATABASE_HOST", default="localhost"),
-    "PORT": config("DATABASE_PORT", default="5432"),
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DATABASE_NAME"),
+        "USER": config("DATABASE_USER"),
+        "PASSWORD": config("DATABASE_PASSWORD"),
+        "HOST": "localhost",
+        "PORT": "5433",
+    }
 }
 
-database_url = config("DATABASE_URL", default=None)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-if database_url:
-    DATABASES = {
-        "default": dj_database_url.parse(
-            database_url,
-            conn_max_age=600,
-            ssl_require=True
-        )
-    }
-else:
-    DATABASES = {"default": LOCAL_DB}
-
+if DATABASE_URL:
+    DATABASES["default"] = dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600,
+        ssl_require=True,
+    )
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
