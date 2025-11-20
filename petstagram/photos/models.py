@@ -1,3 +1,4 @@
+from cloudinary_storage.storage import MediaCloudinaryStorage
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator
 from django.db import models
@@ -13,7 +14,8 @@ class Photo(models.Model):
         validators=[
             FileSizeValidator(5)
         ],
-        upload_to=''
+        upload_to='petstagram/pet_photos/',
+        storage=MediaCloudinaryStorage(),
     )
     description = models.TextField(
         max_length=300,
