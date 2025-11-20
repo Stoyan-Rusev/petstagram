@@ -14,7 +14,6 @@ from pathlib import Path
 
 import dj_database_url
 from decouple import config, Csv
-from django.conf.global_settings import STATIC_ROOT
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -31,6 +30,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default="0").lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+CSRF_TRUSTED_ORIGINS = config('CSRF_TRUSTED_ORIGINS', cast=Csv())
 
 
 # Application definition
