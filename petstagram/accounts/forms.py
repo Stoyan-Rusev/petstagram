@@ -42,4 +42,5 @@ class ProfileEditForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={'placeholder': 'First Name'}),
             'last_name': forms.TextInput(attrs={'placeholder': 'Last Name'}),
+            'date_of_birth': forms.DateInput(attrs={'type': 'date'}),
         }
